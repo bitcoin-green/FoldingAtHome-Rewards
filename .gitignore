@@ -1,7 +1,2 @@
-# ignore all log files except the folder
 *.log
-!logs/
-
-# ignore data-source containing sensitive information
 configs/data-source.json
-!configs/
