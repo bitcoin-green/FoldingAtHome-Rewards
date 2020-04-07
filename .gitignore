@@ -4,3 +4,4 @@
 
 # ignore data-source containing sensitive information
 configs/data-source.json
+!configs/
