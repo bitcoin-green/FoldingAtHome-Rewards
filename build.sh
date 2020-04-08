@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright (C) 2018-2020 The BitGreen Core developers
 
-FatH_Team_Stats=`readlink -f update_team_stats.py`
+FatH_Team_Stats=`readlink -f src/update_team_stats.py`
 root_folder=`pwd`
 
 # set chmod +x on relevant files
@@ -13,4 +13,4 @@ fi
 
 
 # check for team stat updates (every 3 hrs)
-#(crontab -l ; echo "0 */3 * * * ${FatH_Team_Stats} >> ${root_folder}/logs/CRONJOB.log 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "0 */3 * * * ${FatH_Team_Stats} >> ${root_folder}/logs/CRONJOB.log 2>&1") | sort - | uniq - | crontab -

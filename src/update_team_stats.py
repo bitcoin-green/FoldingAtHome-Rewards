@@ -11,7 +11,7 @@ import json
 import os
 
 logging.basicConfig(
-    filename=f"{os.path.dirname(os.path.realpath(__file__))}/logs/F@H_Team_Stats.log",
+    filename=f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}/logs/F@H_Team_Stats.log",
     level=logging.DEBUG,
     format="%(asctime)s:%(levelname)s:%(message)s"
     )
@@ -59,7 +59,7 @@ class UpdateStats:
             logging.debug(f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] - An error has occurred, {postgre_sql_error}")
 
 if __name__ == '__main__':
-    config = fetch_json_file(f"{os.path.dirname(os.path.realpath(__file__))}/configs/data-source.json")
+    config = fetch_json_file(f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}/configs/data-source.json")
     sql = UpdateStats(config['user'],
                       config['password'],
                       config['host'],
