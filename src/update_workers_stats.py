@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # The BitGreen Core developers Folding@Home Project
-# WUS is the PRIMARY KEY
-# INSERT team stats from https://stats.foldingathome.org/api/team/251327 INTO [public.fath_team_stats]
+# Use: INSERT team stats from https://stats.foldingathome.org/api/team/251327 INTO [public.FaTH_Workers]
 
 from datetime import datetime
 import psycopg2
@@ -15,16 +14,16 @@ def fetch_json_file(path):
         data = json.load(json_file)
         return data
 
-class updateTeamStats:
+class UpdateStats:
     def __init__(self, config):
-        self.config     = config
+        self.config = config
 
         self.user       = self.config['user']
         self.passwd     = self.config['password']
         self.host       = self.config['host']
         self.port       = self.config['port']
         self.db         = self.config['database']
-        self.table      = self.config['team_stats_table']
+        self.table      = self.config['workers_table']
         self.team_url   = self.config['folding-api']
 
         # PostgreSQL connection details
@@ -41,18 +40,27 @@ class updateTeamStats:
         r = requests.get(url)
         return r.json()
 
-    def upd_team_stats(self):
+    def upd_worker_stats(self):
         logging.debug(f"Running [{self.table}] data update job")
         logging.debug(f"Fetching data from Folding@Home API: {self.team_url}")
         folding_api = self.fetch_json_url(self.team_url)
+        new_data = []
+        for worker in folding_api['donors']:
+            filtered_keys = ['wus', 'credit', 'name', 'id']
+            modify_worker_details = list(map(worker.get, filtered_keys))
+
+            # Prepare worker data before insert
+            # FORMAT: wus, worker_wus, credits, name, lastupdate, folding_id
+            worker_details = tuple(modify_worker_details)
+            worker_details = worker_details[:0] + (folding_api['wus'],) + worker_details[0:]    #1st column in table
+            worker_details = worker_details[:4] + (folding_api['last'],) + worker_details[4:]   #4th column in table
+            new_data.append(worker_details)
+        new_data_format = ','.join(['%s'] * len(new_data))
+
         try:
+            postgresql_query = f"INSERT INTO {self.table} (wus, worker_wus, credits, name, lastupdate, folding_id) VALUES {new_data_format}"
             logging.debug(f"Running data INSERT INTO [{self.table}]")
-            self.cursor.execute(f""" INSERT INTO {self.table} (wus, rank, active_50, lastupdate, credits)
-                                     VALUES ('{folding_api['wus']}', 
-                                             '{folding_api['rank']}', 
-                                             '{folding_api['active_50']}', 
-                                             '{folding_api['last']}', 
-                                             '{folding_api['credit']}') """)
+            self.cursor.execute(postgresql_query, new_data)
             self.connection.commit()
             logging.debug(f"[{self.table}] has been successfully updated\n")
 
@@ -68,5 +76,5 @@ if __name__ == '__main__':
         format="%(asctime)s:%(levelname)s:%(message)s"
     )
 
-    sql = updateTeamStats(config)
-    sql.upd_team_stats()
+    sql = UpdateStats(config)
+    sql.upd_worker_stats()
