@@ -17,8 +17,17 @@ def block_height():
     except Exception as rpc_error:
         return rpc_error
 
-def unlock_wallet(pass_phrase):
-    return wallet.connect().walletpassphrase(pass_phrase, 15)
+def unlock_wallet(password, timeout):
+    try:
+        return wallet.connect().walletpassphrase(password, timeout)
+    except Exception as rpc_error:
+        return rpc_error
+
+def lock_wallet():
+    try:
+        return wallet.connect().walletlock()
+    except Exception as rpc_error:
+        return rpc_error
 
 def process_worker(address, amount):
     workers[address] = amount

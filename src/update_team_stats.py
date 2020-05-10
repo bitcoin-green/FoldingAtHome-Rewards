@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
-# The BitGreen Core developers Folding@Home Project
-# WUS is the PRIMARY KEY
-# INSERT team stats from https://stats.foldingathome.org/api/team/251327 INTO [public.fath_team_stats]
-
-from datetime import datetime
 import psycopg2
 import requests
 import logging
 import json
 import os
-
-def fetch_json_file(path):
-    with open(path) as json_file:
-        data = json.load(json_file)
-        return data
 
 class updateTeamStats:
     def __init__(self, config):
@@ -60,13 +50,14 @@ class updateTeamStats:
             logging.debug(f"An error has occurred, {postgre_sql_error}\n")
 
 if __name__ == '__main__':
-    config = fetch_json_file(f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}/configs/data-source.json")
+    with open(f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}/configs/data-source.json") as config:
+        config = json.load(config)
 
-    logging.basicConfig(
-        filename=f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}{config['logging_path']}",
-        level=logging.DEBUG,
-        format="%(asctime)s:%(levelname)s:%(message)s"
-    )
+        logging.basicConfig(
+            filename=f"{os.path.dirname(os.path.realpath(__file__)).replace('/src', '')}{config['logging_path']}",
+            level=logging.DEBUG,
+            format="%(asctime)s:%(levelname)s:%(message)s"
+        )
 
-    sql = updateTeamStats(config)
-    sql.upd_team_stats()
+        sql = updateTeamStats(config)
+        sql.upd_team_stats()

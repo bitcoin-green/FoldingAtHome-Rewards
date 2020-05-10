@@ -11,6 +11,7 @@ usr=`cat configs/data-source.json | jq -r '.user'`
 db=`cat configs/data-source.json | jq -r '.database'`
 ts_table_name=`cat configs/data-source.json | jq -r '.team_stats_table' `s
 worker_table_name=`cat configs/data-source.json | jq -r '.workers_table' `s
+tx_audit_table=`cat configs/data-source.json | jq -r '.tx_audit' `s
 
 cowsay "Folding@Home PostgreSQL setup"
 read -p "Enter PostgreSQL server password: " -s passwd; printf "\n"
