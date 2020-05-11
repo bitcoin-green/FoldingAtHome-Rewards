@@ -48,22 +48,22 @@ class Payout:
             #   + WORK UNITS = 0.0156
             #   + CREDITS    = 0.00000003125
             if (blockheight >= 2275000):
-                wu_reward = 0.0156
+                wu_reward = 0.0078
                 credit_reward = 0.00000003125
             elif (blockheight >= 1750000):
-                wu_reward = 0.0312
+                wu_reward = 0.0156
                 credit_reward = 0.0000000625
             elif (blockheight >= 1225000):
-                wu_reward = 0.0625
+                wu_reward = 0.0312
                 credit_reward  = 0.000000125
             elif (blockheight >= 700000):
-                wu_reward = 0.125
+                wu_reward = 0.0625
                 credit_reward  = 0.00000025
             elif (blockheight >= 175000):
-                wu_reward = 0.25
+                wu_reward = 0.125
                 credit_reward  = 0.00000050
             else:
-                wu_reward = 0.5
+                wu_reward = 0.25
                 credit_reward = 0.00000100
 
             logging.info(f"Block height: {wallet_rpc.block_height()}")

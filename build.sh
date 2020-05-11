@@ -1,5 +1,4 @@
 #!/bin/bash
-# Copyright (C) 2018-2020 The BitGreen Core developers
 
 FatH_Team_Stats=`readlink -f src/update_team_stats.py`
 FatH_Workers=`readlink -f src/update_workers_stats.py`

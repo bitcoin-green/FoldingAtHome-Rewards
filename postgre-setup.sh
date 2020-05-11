@@ -1,17 +1,13 @@
 #!/bin/bash
-# Copyright (C) 2018-2020 The BitGreen Core developers Folding@Home Project
 # Enviroment: Ubuntu 18.04
 
-#apt update
-#apt install postgresql postgresql-contrib
-#apt install jq
-#apt install cowsay
+apt-get jq cowsay -y
 
 usr=`cat configs/data-source.json | jq -r '.user'`
 db=`cat configs/data-source.json | jq -r '.database'`
-ts_table_name=`cat configs/data-source.json | jq -r '.team_stats_table' `s
-worker_table_name=`cat configs/data-source.json | jq -r '.workers_table' `s
-tx_audit_table=`cat configs/data-source.json | jq -r '.tx_audit' `s
+teamstats_tbl_name=`cat configs/data-source.json | jq -r '.team_stats_table' `s
+worker_tbl_name=`cat configs/data-source.json | jq -r '.workers_table' `s
+txaudit_tbl_name=`cat configs/data-source.json | jq -r '.tx_audit' `s
 
 cowsay "Folding@Home PostgreSQL setup"
 read -p "Enter PostgreSQL server password: " -s passwd; printf "\n"
@@ -38,9 +34,7 @@ echo "+ Creating database: $db"
 create_db="$(psql "postgresql://$usr:$passwd@localhost/postgres" -c "CREATE DATABASE $db" 2>&1)"
 postgre_handler "$create_db"
 
-## CREATE TABLE: FaTH_Team_Stats ####
-echo "+ Creating table: '$ts_table_name'"
-create_ts_table="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$ts_table_name
+create_teamstats_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$teamstats_tbl_name
                                                                       (
                                                                         wus bigint NOT NULL UNIQUE,
                                                                         rank bigint NOT NULL,
@@ -48,11 +42,8 @@ create_ts_table="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TAB
                                                                         lastupdate timestamp without time zone NOT NULL,
                                                                         credits bigint NOT NULL
                                                                       )" 2>&1)"
-postgre_handler "$create_ts_table"
-
-## CREATE TABLE: FaTH_Workers #######
-echo "+ Creating table: '$worker_table_name'"
-create_worker_table="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$worker_table_name
+                                                                      
+create_workers_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$worker_tbl_name
                                                                           (
                                                                               wus bigint NOT NULL,
                                                                               worker_wus bigint NOT NULL,
@@ -61,17 +52,16 @@ create_worker_table="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE
                                                                               lastupdate timestamp without time zone NOT NULL,
                                                                               folding_id bigint NOT NULL
                                                                           )" 2>&1)"
-postgre_handler "$create_worker_table"
-
-## CREATE TABLE: FaTH_Workers #######
-echo "+ Creating table: '$worker_table_name'"
-create_worker_table="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$worker_table_name
+create_txaudit_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$worker_tbl_name
                                                                           (
                                                                               wus bigint NOT NULL,
-                                                                              worker_wus bigint NOT NULL,
-                                                                              credits bigint NOT NULL,
-                                                                              name VARCHAR(125),
-                                                                              lastupdate timestamp without time zone NOT NULL,
-                                                                              folding_id bigint NOT NULL
+                                                                              txid varchar(125) NOT NULL,
+                                                                              transacted numeric NOT NULL,
+                                                                              total_workers bigint NOT NULL,
+                                                                              'timestamp' timestamp without time zone NOT NULL
                                                                           )" 2>&1)"
-postgre_handler "$create_worker_table"
+
+echo "+ Creating table(s): '$teamstats_tbl_name'\n$worker_tbl_name\n$txaudit_tbl_name"
+postgre_handler "$create_teamstats_tbl"
+postgre_handler "$create_workers_tbl"
+postgre_handler "$create_txaudit_tbl"
