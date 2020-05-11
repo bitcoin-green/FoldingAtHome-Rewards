@@ -1,8 +1,6 @@
 #!/bin/bash
 # Enviroment: Ubuntu 18.04
 
-apt-get jq cowsay -y
-
 usr=`cat configs/data-source.json | jq -r '.user'`
 db=`cat configs/data-source.json | jq -r '.database'`
 teamstats_tbl_name=`cat configs/data-source.json | jq -r '.team_stats_table' `s
@@ -52,13 +50,13 @@ create_workers_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE 
                                                                               lastupdate timestamp without time zone NOT NULL,
                                                                               folding_id bigint NOT NULL
                                                                           )" 2>&1)"
-create_txaudit_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$worker_tbl_name
+create_txaudit_tbl="$(psql "postgresql://$usr:$passwd@localhost/$db" -c "CREATE TABLE public.$txaudit_tbl_name
                                                                           (
                                                                               wus bigint NOT NULL,
                                                                               txid varchar(125) NOT NULL,
                                                                               transacted numeric NOT NULL,
                                                                               total_workers bigint NOT NULL,
-                                                                              'timestamp' timestamp without time zone NOT NULL
+                                                                              ""timestamp"" timestamp without time zone NOT NULL
                                                                           )" 2>&1)"
 
 echo "+ Creating table(s): '$teamstats_tbl_name'\n$worker_tbl_name\n$txaudit_tbl_name"

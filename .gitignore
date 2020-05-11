@@ -1,2 +1,4 @@
 *.log
+*.key
 /.idea
+/.__pycache__
