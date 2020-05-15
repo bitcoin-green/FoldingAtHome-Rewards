@@ -112,7 +112,7 @@ class Payout:
                 paid_workers = paid_workers + 1
 
                 # add worker to payroll
-                wallet_rpc.process_worker(worker_id[1], round(0.005, 3)) # 3 decimal places
+                wallet_rpc.process_worker(worker_id[1], round(coin_payout, 3)) # 3 decimal places
 
             # send pay-out to workers
             # RPC errors reference: https://github.com/bitcoin/bitcoin/blob/v0.15.0.1/src/rpc/protocol.h#L32L87
@@ -124,7 +124,6 @@ class Payout:
                 # decrypt wallet passphrase using private_key and unlock for 10 seconds
                 # make payment before locking wallet
                 password = self.decrypt_passphrase(self.config['wallet_passphrase']).decode('utf-8')
-                print(password)
                 logging.info(wallet_rpc.unlock_wallet(password, 10))
                 logging.info(wallet_rpc.pay_workers())
                 wallet_rpc.lock_wallet()

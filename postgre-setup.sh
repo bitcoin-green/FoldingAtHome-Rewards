@@ -3,9 +3,9 @@
 
 usr=`cat configs/data-source.json | jq -r '.user'`
 db=`cat configs/data-source.json | jq -r '.database'`
-teamstats_tbl_name=`cat configs/data-source.json | jq -r '.team_stats_table' `s
-worker_tbl_name=`cat configs/data-source.json | jq -r '.workers_table' `s
-txaudit_tbl_name=`cat configs/data-source.json | jq -r '.tx_audit' `s
+teamstats_tbl_name=`cat configs/data-source.json | jq -r '.team_stats_table'
+worker_tbl_name=`cat configs/data-source.json | jq -r '.workers_table'
+txaudit_tbl_name=`cat configs/data-source.json | jq -r '.tx_audit'
 
 cowsay "Folding@Home PostgreSQL setup"
 read -p "Enter PostgreSQL server password: " -s passwd; printf "\n"
