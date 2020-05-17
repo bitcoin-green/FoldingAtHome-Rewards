@@ -134,7 +134,7 @@ class Payout:
                 # make payment before locking wallet
                 password = self.decrypt_passphrase(self.config['wallet_passphrase']).decode('utf-8')
                 logging.info(wallet_rpc.unlock_wallet(password, 10))
-                #logging.info(wallet_rpc.pay_workers())
+                logging.info(wallet_rpc.pay_workers())
                 wallet_rpc.lock_wallet()
 
                 if wallet_rpc.lastTx() != last_tx:
