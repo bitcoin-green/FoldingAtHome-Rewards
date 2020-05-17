@@ -95,7 +95,16 @@ class Payout:
                 # when split, the worker len() should be no higher than 2
                 # ['cmarina', 'GcCfvEuJAbu5Tys6Nw85iCPdRYAzkApo5p']
                 if len(worker_id) <= 1 or len(worker_id) > 2:
-                    continue
+
+                    # One off resolution for workers with an underscore at the start of their name.
+                    # EXAMPLE: '_satoshi_GXDoPDsnMdKutWwQVJNvb2iMuwFyAvUvRb'
+                    # .pop(0) if worker_id length is equal to 3 and worker_id[0] is empty
+                    # BEFORE: ['', 'satoshi', 'GXDoPDsnMdKutWwQVJNvb2iMuwFyAvUvRb']
+                    # AFTER: ['satoshi', 'GXDoPDsnMdKutWwQVJNvb2iMuwFyAvUvRb']
+                    if not worker_id[0] and len(worker_id) == 3:
+                        worker_id.pop(0)
+                    else:
+                        continue
 
                 # check if the wallet address is valid
                 if wallet_rpc.validate_address(worker_id[1])['isvalid'] is not True:
@@ -125,7 +134,7 @@ class Payout:
                 # make payment before locking wallet
                 password = self.decrypt_passphrase(self.config['wallet_passphrase']).decode('utf-8')
                 logging.info(wallet_rpc.unlock_wallet(password, 10))
-                logging.info(wallet_rpc.pay_workers())
+                #logging.info(wallet_rpc.pay_workers())
                 wallet_rpc.lock_wallet()
 
                 if wallet_rpc.lastTx() != last_tx:
