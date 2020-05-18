@@ -63,7 +63,7 @@ class Payout:
                 wu_reward = 0.125
                 credit_reward  = 0.00000050
             else:
-                wu_reward = 0.25
+                wu_reward = 0.185
                 credit_reward = 0.00000100
 
             logging.info(f"Block height: {wallet_rpc.block_height()}")
