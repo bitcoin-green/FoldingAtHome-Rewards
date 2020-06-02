@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS tmp_previous_snapshot;
 DROP TABLE IF EXISTS tmp_completed_work;
 
 CREATE TEMP TABLE tmp_recent_snapshot AS
-SELECT
+SELECT DISTINCT ON (worker.name)
     worker.*
 FROM
     fath_workers worker
@@ -38,7 +38,7 @@ WHERE
 ORDER BY
     worker.name DESC;
 CREATE TEMP TABLE tmp_previous_snapshot AS
-SELECT
+SELECT DISTINCT ON (worker.name)
     worker.*
 FROM
     fath_workers worker
