@@ -4,5 +4,11 @@
   "host": "",
   "port": "",
   "database": "",
+  "wallet_passphrase": "<hash-value (fernet.py)>",
+  "team_stats_table": "FatH_team_stats",
+  "workers_table": "FatH_workers",
+  "tx_audit": "transaction_audit",
+  "stored_sql": "/postgresql/procedures/",
+  "logging_path": "/logs/debug.log",
   "folding-api": "https://stats.foldingathome.org/api/team/251327"
 }
