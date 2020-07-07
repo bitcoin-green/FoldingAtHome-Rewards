@@ -6,9 +6,11 @@
   "database": "",
   "wallet_passphrase": "<hash-value (fernet.py)>",
   "team_stats_table": "FatH_team_stats",
+  "team_stats_indepth_table": "FatH_team_stats_detailed",
   "workers_table": "FatH_workers",
   "tx_audit": "transaction_audit",
   "stored_sql": "/postgresql/procedures/",
   "logging_path": "/logs/debug.log",
-  "folding-api": "https://stats.foldingathome.org/api/team/251327"
+  "folding-api": "https://stats.foldingathome.org/api/team/251327",
+  "extreme-api": "https://folding.extremeoverclocking.com/xml/team_summary.php?t=251327"
 }
