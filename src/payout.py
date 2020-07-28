@@ -43,28 +43,38 @@ class Payout:
             active_workers = self.cursor.fetchall()
             blockheight = wallet_rpc.block_height()
 
-            # Adjust rewards each block halving. MAX BLOCKS: 2275000 (subject to change)
-            # Once block 2,275,000 has been reached, the rewards will stay fixed to the following values until reviewed
-            #   + WORK UNITS = 0.0156
-            #   + CREDITS    = 0.00000003125
-            if (blockheight >= 2275000):
-                wu_reward = 0.0078
-                credit_reward = 0.00000003125
-            elif (blockheight >= 1750000):
-                wu_reward = 0.0156
-                credit_reward = 0.0000000625
-            elif (blockheight >= 1225000):
-                wu_reward = 0.0312
-                credit_reward  = 0.000000125
-            elif (blockheight >= 700000):
-                wu_reward = 0.0625
-                credit_reward  = 0.00000025
+            # 5th Halving: 25 ÷ 100 * 0.0395 = 0.0098 BITG (reduction)
+            #               0.0395 - 0.0098  = 0.029 BITG (reward)
+            if (blockheight >= 415800):
+                wu_reward = 0.02966
+                credit_reward = 0.00000025
+
+            # 4th Halving: 25 ÷ 100 * 0.0527 = 0.0131 BITG (reduction)
+            #               0.0527 - 0.0131  = 0.0395 BITG (reward)
+            elif (blockheight >= 355600):
+                wu_reward = 0.03955
+                credit_reward = 0.00000025
+
+            # 3rd Halving: 25 ÷ 100 * 0.0703 = 0.0175 BITG (reduction)
+            #               0.0703 - 0.0175  = 0.0527 BITG (reward)
+            elif (blockheight >= 295400):
+                wu_reward = 0.0527
+                credit_reward = 0.00000025
+
+            # 2nd Halving: 25 ÷ 100 * 0.0937 = 0.0234 BITG (reduction)
+            #               0.0937 - 0.0234  = 0.0703 BITG (reward)
+            elif (blockheight >= 235200):
+                wu_reward = 0.0703
+                credit_reward = 0.00000025
+
+            # 1st Halving: 25 ÷ 100 * 0.1250 = 0.0312 BITG (reduction)
+            #               0.1250 - 0.0312  = 0.0937 BITG (reward)
             elif (blockheight >= 175000):
-                wu_reward = 0.125
-                credit_reward  = 0.00000050
+                wu_reward = 0.0937
+                credit_reward = 0.00000025
             else:
-                wu_reward = 0.185
-                credit_reward = 0.00000100
+                wu_reward = 0.1250
+                credit_reward = 0.00000125
 
             logging.info(f"Block height: {wallet_rpc.block_height()}")
             logging.info(f"{float(wu_reward)} BITG per work unit")
